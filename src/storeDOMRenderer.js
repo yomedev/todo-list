@@ -1,23 +1,26 @@
-import DOMElementFactory from "./DOMElementFactory";
+import listItemFactory from "./listItemFactory";
 
 const storeDOMRenderer = (store) => {
     const list = document.getElementById('taskList');
 
-    const renderDOM = () => {
+    const renderList = () => {
         list.innerHTML = '';
-        store.getStore().forEach(element => {
-            const item = DOMElementFactory('li', ['flex', 'flex-col', 'justify-between', 'border-2', 'border-white', 'px-3', 'mb-1', 'hover:px-4', 'hover:py-1', 'hover:ease-in', 'duration-300']);
-            const title = DOMElementFactory('p', ['text-lg']);
-            title.addContent(element.getTitle());;
-            item.addToElement(title.getElement());
-            const date = DOMElementFactory('p', ['text-sm', 'text-gray-500']);
-            date.addContent(element.getDate());
-            item.addToElement(date.getElement());
-            list.append(item.getElement());
+        store.getStore().forEach(elem => {
+            const item = listItemFactory(elem).getDemoItem();
+            list.append(item);
         });
+        return list.childNodes;
     }
 
-    return { renderDOM };
+    const replaceItem = (newItem, oldItem) => {
+        list.replaceChild(newItem, oldItem);
+    }
+
+    const addItem = (newItem) => {
+        list.append(listItemFactory(newItem).getDemoItem());
+    }
+
+    return { renderList, addItem, replaceItem };
 }
 
 export default storeDOMRenderer;

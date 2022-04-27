@@ -23,7 +23,7 @@ const inputDateOutputter = () => {
     const input = document.getElementById('dueDate');
     const value = new Date(input.valueAsDate);
     input.valueAsDate = new Date();
-    const getDate = () => value.toLocaleDateString('en-US', { weekday: 'short', });
+    const getDate = () => value;
     return { getDate };
 }
 
