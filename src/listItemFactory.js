@@ -9,17 +9,17 @@ const listItemFactory = (task) => {
         item.classList.add('hover:p-3', 'hover:ease-in', 'duration-300');
 
         item.append( createTextElem(task.value.getTitle()),
-            createTextElem(task.value.getDay(), 'text-sm', 'text-gray-500') );
+            createTextElem(task.value.getDay(), 'text-sm', 'text-gray-500'));
 
         return item;
     }
 
     const getEditItem = () => {
-        item.append( createTextInputElem('Title', task.value.getTitle()),
-            createTextInputElem('Description', task.value.getDesc()),
-            createDateInputElem(task.value.getDate()),
-            createCheckInputElem(task.value.getIsPrior()),
-            createButtonElem('Save') );
+        item.append( createTextInputElem('Title', task.value.getTitle(), 'editTitle'),
+            createTextInputElem('Description', task.value.getDesc(), 'editDesc'),
+            createDateInputElem(task.value.getDate(), 'editDueDate'),
+            createCheckInputElem(task.value.getIsPrior(), 'editPrior'),
+            createButtonElem('Save', 'saveBtn') );
         
         return item;
     }

@@ -6,9 +6,10 @@ const createTextElem = (text, ...classList) => {
     return textElem;
 }
 
-const createTextInputElem = (placeholder, value) => {
+const createTextInputElem = (placeholder, value, id) => {
     const input = document.createElement('input');
     input.classList.add('px-1', 'bg-indigo-100', 'focus:outline-none');
+    input.setAttribute('id', id);
     input.type = 'text';
     input.placeholder = placeholder;
     input.value = value;
@@ -16,27 +17,30 @@ const createTextInputElem = (placeholder, value) => {
     return input;
 }
 
-const createDateInputElem = (value) => {
+const createDateInputElem = (value, id) => {
     const input = document.createElement('input');
     input.classList.add('bg-indigo-100', 'w-1/2', 'focus:outline-none');
+    input.setAttribute('id', id);
     input.type = 'date';
     input.valueAsDate = value;
 
     return input;
 }
 
-const createCheckInputElem = (checked) => {
+const createCheckInputElem = (checked, id) => {
     const input = document.createElement('input');
-    input.classList.add('w-5', 'h-5')
+    input.classList.add('w-5', 'h-5');
+    input.setAttribute('id', id);
     input.type = 'checkbox';
     input.checked = checked;
 
     return input;
 }
 
-const createButtonElem = (text) => {
+const createButtonElem = (text, id) => {
     const button = document.createElement('button');
-    button.classList.add('p-1', 'w-1/2', 'bg-indigo-300', 'disabled:opacity-75');
+    button.classList.add('p-1', 'w-1/2', 'bg-indigo-300');
+    button.setAttribute('id', id);
     button.disabled = true;
     button.textContent = text;
 

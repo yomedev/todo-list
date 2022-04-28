@@ -31,34 +31,38 @@ var createTextElem = function createTextElem(text) {
   return textElem;
 };
 
-var createTextInputElem = function createTextInputElem(placeholder, value) {
+var createTextInputElem = function createTextInputElem(placeholder, value, id) {
   var input = document.createElement('input');
   input.classList.add('px-1', 'bg-indigo-100', 'focus:outline-none');
+  input.setAttribute('id', id);
   input.type = 'text';
   input.placeholder = placeholder;
   input.value = value;
   return input;
 };
 
-var createDateInputElem = function createDateInputElem(value) {
+var createDateInputElem = function createDateInputElem(value, id) {
   var input = document.createElement('input');
   input.classList.add('bg-indigo-100', 'w-1/2', 'focus:outline-none');
+  input.setAttribute('id', id);
   input.type = 'date';
   input.valueAsDate = value;
   return input;
 };
 
-var createCheckInputElem = function createCheckInputElem(checked) {
+var createCheckInputElem = function createCheckInputElem(checked, id) {
   var input = document.createElement('input');
   input.classList.add('w-5', 'h-5');
+  input.setAttribute('id', id);
   input.type = 'checkbox';
   input.checked = checked;
   return input;
 };
 
-var createButtonElem = function createButtonElem(text) {
+var createButtonElem = function createButtonElem(text, id) {
   var button = document.createElement('button');
-  button.classList.add('p-1', 'w-1/2', 'bg-indigo-300', 'disabled:opacity-75');
+  button.classList.add('p-1', 'w-1/2', 'bg-indigo-300');
+  button.setAttribute('id', id);
   button.disabled = true;
   button.textContent = text;
   return button;
@@ -174,7 +178,7 @@ var listItemFactory = function listItemFactory(task) {
   };
 
   var getEditItem = function getEditItem() {
-    item.append((0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Title', task.value.getTitle()), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Description', task.value.getDesc()), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createDateInputElem)(task.value.getDate()), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createCheckInputElem)(task.value.getIsPrior()), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createButtonElem)('Save'));
+    item.append((0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Title', task.value.getTitle(), 'editTitle'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Description', task.value.getDesc(), 'editDesc'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createDateInputElem)(task.value.getDate(), 'editDueDate'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createCheckInputElem)(task.value.getIsPrior(), 'editPrior'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createButtonElem)('Save', 'saveBtn'));
     return item;
   };
 
@@ -203,6 +207,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var storeDOMRenderer = function storeDOMRenderer(store) {
   var list = document.getElementById('taskList');
+  list.p;
 
   var renderList = function renderList() {
     list.innerHTML = '';
@@ -213,18 +218,35 @@ var storeDOMRenderer = function storeDOMRenderer(store) {
     return list.childNodes;
   };
 
-  var replaceItem = function replaceItem(newItem, oldItem) {
-    list.replaceChild(newItem, oldItem);
+  var changeItemToEdit = function changeItemToEdit(demo) {
+    var index = demo.getAttribute('data-index');
+    var task = store.getItemByIndex(index);
+    var edit = (0,_listItemFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(task).getEditItem();
+    list.replaceChild(edit, demo);
+    return edit;
   };
 
-  var addItem = function addItem(newItem) {
-    list.append((0,_listItemFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(newItem).getDemoItem());
+  var changeItemToDemo = function changeItemToDemo(edit) {
+    var index = edit.getAttribute('data-index');
+    var task = store.getItemByIndex(index);
+    var demo = (0,_listItemFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(task).getDemoItem();
+    list.replaceChild(demo, edit);
+    return demo;
   };
+
+  var addItem = function addItem(task) {
+    var item = (0,_listItemFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(task).getDemoItem();
+    list.append(item);
+    return item;
+  };
+
+  var changeItemValue = function changeItemValue(item, task) {};
 
   return {
     renderList: renderList,
     addItem: addItem,
-    replaceItem: replaceItem
+    changeItemToEdit: changeItemToEdit,
+    changeItemToDemo: changeItemToDemo
   };
 };
 
@@ -268,6 +290,7 @@ var storeFactory = function storeFactory() {
       id: store.length,
       value: task
     });
+    return store[store.length - 1];
   };
 
   var getStore = function getStore() {
@@ -287,10 +310,11 @@ var storeFactory = function storeFactory() {
   };
 
   var removeFromStore = function removeFromStore(i) {
-    store.splice(i, 1);
+    var removed = store.splice(i, 1)[0];
     store.forEach(function (elem, index) {
       elem.id = index;
     });
+    return removed;
   };
 
   return {
@@ -338,14 +362,27 @@ var taskFactory = function taskFactory(title, desc, date, isPrior) {
 
   var getIsPrior = function getIsPrior() {
     return isPrior;
-  }; // const getTask = () => ({ title, desc, date, isPrior });
+  };
 
+  var cloneTask = function cloneTask() {
+    return taskFactory(title, desc, date, isPrior);
+  };
 
-  var logTask = function logTask() {
-    console.log("title: ".concat(title));
-    console.log("desc: ".concat(desc));
-    console.log("date: ".concat(date));
-    console.log("isPrior: ".concat(isPrior));
+  var changeTitle = function changeTitle(t) {
+    title = t;
+    return title;
+  };
+
+  var changeDesc = function changeDesc(d) {
+    desc = d;
+  };
+
+  var changeDate = function changeDate(d) {
+    date = d;
+  };
+
+  var changePrior = function changePrior(p) {
+    isPrior = p;
   };
 
   return {
@@ -354,7 +391,11 @@ var taskFactory = function taskFactory(title, desc, date, isPrior) {
     getDate: getDate,
     getDay: getDay,
     getIsPrior: getIsPrior,
-    logTask: logTask
+    changeDate: changeDate,
+    changeDesc: changeDesc,
+    changePrior: changePrior,
+    changeTitle: changeTitle,
+    cloneTask: cloneTask
   };
 };
 
@@ -429,8 +470,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _inputsOutputter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./inputsOutputter */ "./src/inputsOutputter.js");
 /* harmony import */ var _storeFactory__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./storeFactory */ "./src/storeFactory.js");
 /* harmony import */ var _storeDOMRenderer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./storeDOMRenderer */ "./src/storeDOMRenderer.js");
-/* harmony import */ var _listItemFactory__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./listItemFactory */ "./src/listItemFactory.js");
-
 
 
 
@@ -443,29 +482,47 @@ var arr = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Book', 'Rea
 var store = (0,_storeFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(arr);
 var renderer = (0,_storeDOMRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(store);
 renderer.renderList().forEach(function (item) {
-  item.addEventListener('click', clickTaskHandler);
+  item.addEventListener('dblclick', dblclickTaskHandler);
 });
 
 function addTaskHandler() {
   var inputs = (0,_inputsOutputter__WEBPACK_IMPORTED_MODULE_1__.inputsOutputter)();
   var task = (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(inputs.getTitleValue(), inputs.getDescValue(), inputs.getDateValue(), inputs.getPriorValue());
-  store.addToStore(task);
-  renderer.addItem({
-    id: store.lenth - 1,
-    value: task
-  });
+  renderer.addItem(store.addToStore(task)).addEventListener('dblclick', dblclickTaskHandler);
 }
 
-function clickTaskHandler(e) {
+function dblclickTaskHandler(e) {
   var item = e.currentTarget;
-  item.removeEventListener('click', clickTaskHandler);
-  var index = item.getAttribute('data-index');
-  var task = store.getItemByIndex(index);
-  var newItem = (0,_listItemFactory__WEBPACK_IMPORTED_MODULE_4__["default"])(task).getEditItem();
-  renderer.replaceItem(newItem, item);
+  item.removeEventListener('dblclick', dblclickTaskHandler);
+  item = renderer.changeItemToEdit(item);
+  var task = store.getItemValueByIndex(item.getAttribute('data-index'));
+  saveEditHandler(item, editInputsHandler(task.cloneTask(), task));
 }
+
+var editInputsHandler = function editInputsHandler(newTask, task) {
+  document.getElementById('editTitle').addEventListener('input', function (e) {
+    document.getElementById('saveBtn').disabled = newTask.changeTitle(e.currentTarget.value) === task.getTitle() || newTask.getTitle().length < 1;
+  });
+  document.getElementById('editDesc').addEventListener('input', function (e) {
+    document.getElementById('saveBtn').disabled = newTask.changeDesc(e.currentTarget.value) === task.getDesc();
+  });
+  document.getElementById('editDueDate').addEventListener('input', function (e) {
+    document.getElementById('saveBtn').disabled = newTask.changeDate(e.currentTarget.valueAsDate) === task.getDate();
+  });
+  document.getElementById('editPrior').addEventListener('input', function (e) {
+    document.getElementById('saveBtn').disabled = newTask.changePrior(e.currentTarget.checked) === task.getIsPrior();
+  });
+  return newTask;
+};
+
+var saveEditHandler = function saveEditHandler(item, task) {
+  document.getElementById('saveBtn').addEventListener('click', function (e) {
+    store.changeItemValue(e.currentTarget.parentElement.getAttribute('data-index'), task);
+    renderer.changeItemToDemo(item).addEventListener('dblclick', dblclickTaskHandler);
+  });
+};
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.b5d62cbcf30cd8dade17.js.map
+//# sourceMappingURL=bundle.e701d041a6793a687f51.js.map

@@ -4,6 +4,7 @@ const storeFactory = (s = []) => {
 
     const addToStore = (task) => {
         store.push({ id: store.length, value: task });
+        return store[store.length - 1];
     }
 
     const getStore = () => [...store];
@@ -17,10 +18,11 @@ const storeFactory = (s = []) => {
     }
 
     const removeFromStore = (i) => {
-        store.splice(i, 1);
+        const removed = store.splice(i, 1)[0];
         store.forEach((elem, index) => {
             elem.id = index;
         });
+        return removed;
     }
 
     return { addToStore, getItemByIndex, getItemValueByIndex, changeItemValue, getStore, removeFromStore };
