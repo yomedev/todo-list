@@ -12,32 +12,58 @@
 <body>
     <div id="content" class="container mx-auto flex flex-col items-center space-y-8 capitalize">
         <h1 class="text-3xl font-bold underline text-center mt-4">ToDo List</h1>
-        <form action=""
-            class="flex flex-col justify-center items-center w-1/2 space-y-6 py-6 bg-indigo-200 text-center ">
+        <div class="flex w-full space-x-8">
 
-            <div class="flex flex-col">
-                <label for="title">enter title</label>
-                <input class="focus:outline-none" type="text" placeholder="Title" id="title">
-            </div>
-            <div class="flex flex-col">
-                <label for="desc">enter desc</label>
-                <input class="focus:outline-none" type="text" placeholder="Description" id="desc">
-            </div>
-            <div class="flex flex-col">
-                <label for="dueDate">enter due date</label>
-                <input class="focus:outline-none" type="date" name="" id="dueDate">
-            </div>
-            <div class="flex flex-col">
-                <label for="isPrioritized">check priority</label>
-                <input class="focus:outline-none" type="checkbox" name="" id="isPrioritized">
-            </div>
-            <button type="button" class="bg-white" id="addTask">Add Task</button>
 
-        </form>
-        <div class="flex flex-col bg-indigo-200 w-1/2 text-center p-6 space-y-6">
-            <h2 class="text-xl font-bold">Your tasks</h2>
-            <ul id="taskList" class="text-left text-lg space-y-2">  
-            </ul>
+            <div class="flex flex-col w-1/2 space-y-6">
+                <div class="flex flex-col items-center w-full space-y-6 py-6 px-4 bg-indigo-200 text-center ">
+                    <h2 class="text-xl font-bold">create project</h2>
+                    <div class="flex flex-col">
+                        <label for="titleProj">enter title</label>
+                        <input class="focus:outline-none" type="text" placeholder="Title" id="titleProj">
+                    </div>
+                    <button type="button" class="bg-white" id="addProj">Add Project</button>
+                </div>
+
+                <div class="flex flex-col justify-center items-center w-full space-y-6 py-6 bg-indigo-200 text-center ">
+                    <h2 class="text-xl font-bold">create task</h2>
+                    <div class="flex flex-col">
+                        <label for="title">enter title</label>
+                        <input class="focus:outline-none" type="text" placeholder="Title" id="title">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="desc">enter desc</label>
+                        <input class="focus:outline-none" type="text" placeholder="Description" id="desc">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="dueDate">enter due date</label>
+                        <input class="focus:outline-none" type="date" name="" id="dueDate">
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <label for="isPrioritized">check priority</label>
+                        <input class="w-5 h-5 focus:outline-none" type="checkbox" name="" id="isPrioritized">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="projSelecter">choose project</label>
+                        <select name="" id="projSelecter"></select>
+                    </div>
+                    <button type="button" class="bg-white" id="addTask">Add Task</button>
+                </div>
+            </div>
+
+            <div class="flex flex-col w-1/2 space-y-6">
+                <div class="flex flex-col items-center p-6 bg-indigo-200">
+                    <button type="button" class="bg-white w-1/2 p-2" id="openProj">Projects</button>
+                    <ul id="projList" class="flex-col bg-indigo-300 w-1/2 text-center hidden"></ul>
+                </div>
+
+                <div class="flex flex-col bg-indigo-200 text-center p-6 space-y-6">
+                    <h2 id="projHeader" class="text-xl font-bold"></h2>
+                    <ul id="taskList" class="text-left text-lg space-y-2"></ul>
+                </div>
+            </div>
+
+
         </div>
     </div>
 

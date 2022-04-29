@@ -12,7 +12,6 @@ const taskFactory = (title, desc, date, isPrior) => {
 
     const cloneTask = () => taskFactory(title, desc, date, isPrior);
 
-
     const changeTitle = (t) => {
         title = t;
         return title;

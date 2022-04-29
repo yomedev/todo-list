@@ -39,6 +39,7 @@ const createCheckInputElem = (checked, id) => {
 
 const createButtonElem = (text, id) => {
     const button = document.createElement('button');
+    button.type = 'button'
     button.classList.add('p-1', 'w-1/2', 'bg-indigo-300');
     button.setAttribute('id', id);
     button.disabled = true;
@@ -47,4 +48,18 @@ const createButtonElem = (text, id) => {
     return button;
 }
 
-export { createTextElem, createTextInputElem, createDateInputElem, createCheckInputElem, createButtonElem };
+const createDelButton = () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('p-1', 'w-1/2', 'bg-red-300');
+    button.setAttribute('id', 'delBtn');
+    button.textContent = "Delete";
+    return button;
+}
+
+const createSelect = () => {
+    const select = document.createElement('select');
+    
+}
+
+export { createTextElem, createTextInputElem, createDateInputElem, createCheckInputElem, createButtonElem, createDelButton };

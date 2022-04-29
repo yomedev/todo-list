@@ -1,8 +1,8 @@
 import listItemFactory from "./listItemFactory";
 
-const storeDOMRenderer = (store) => {
+const taskStoreRenderer = (store) => {
     const list = document.getElementById('taskList');
-    list.p
+    
     const renderList = () => {
         list.innerHTML = '';
         store.getStore().forEach(elem => {
@@ -34,12 +34,19 @@ const storeDOMRenderer = (store) => {
         return item;
     }
 
-    const changeItemValue = (item, task) => {
-        
+    const removeItem = (item) => {
+        list.removeChild(item);
+        list.childNodes.forEach((elem, i) => {
+            elem.setAttribute('data-index', i);
+        });
+        return item;
     }
 
+    const getList = () => {
+        return list;
+    }
 
-    return { renderList, addItem, changeItemToEdit, changeItemToDemo };
+    return { renderList, addItem, changeItemToEdit, changeItemToDemo, removeItem, getList };
 }
 
-export default storeDOMRenderer;
+export default taskStoreRenderer;

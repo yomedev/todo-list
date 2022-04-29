@@ -1,11 +1,8 @@
 
-const storeFactory = (s = []) => {
+const taskStoreFactory = (s = []) => {
     const store = s.length > 0 ? s.map((item, index) => ({ id: index, value: item })) : [];
 
-    const addToStore = (task) => {
-        store.push({ id: store.length, value: task });
-        return store[store.length - 1];
-    }
+    const addToStore = (task) => store[store.push({ id: store.length, value: task })];
 
     const getStore = () => [...store];
 
@@ -28,4 +25,4 @@ const storeFactory = (s = []) => {
     return { addToStore, getItemByIndex, getItemValueByIndex, changeItemValue, getStore, removeFromStore };
 }
 
-export default storeFactory;
+export default taskStoreFactory;
