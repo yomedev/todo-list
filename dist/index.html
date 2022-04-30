@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ToDo List</title>
     <link rel="stylesheet" href="/dist/output.css">
-<script defer src="bundle.427d6800d0886081657d.js"></script></head>
+<script defer src="bundle.7027dc302a915275afd5.js"></script></head>
 
 <body>
     <div id="content" class="container mx-auto flex flex-col items-center space-y-8 capitalize">
@@ -45,7 +45,7 @@
                     </div>
                     <div class="flex flex-col">
                         <label for="projSelecter">choose project</label>
-                        <select name="" id="projSelecter"></select>
+                        <select name="selecter" id="projSelecter"></select>
                     </div>
                     <button type="button" class="bg-white" id="addTask">Add Task</button>
                 </div>
@@ -53,8 +53,8 @@
 
             <div class="flex flex-col w-1/2 space-y-6">
                 <div class="flex flex-col items-center p-6 bg-indigo-200">
-                    <button type="button" class="bg-white w-1/2 p-2" id="openProj">Projects</button>
-                    <ul id="projList" class="flex-col bg-indigo-300 w-1/2 text-center hidden"></ul>
+                    <h2 class="text-xl font-bold">Pick Project</h2>
+                    <select name="picker" id="projPicker"></select>
                 </div>
 
                 <div class="flex flex-col bg-indigo-200 text-center p-6 space-y-6">

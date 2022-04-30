@@ -1,6 +1,8 @@
-const projectFactory = (title, store = []) => {
+import taskStoreFactory from "./taskStoreFactory";
+
+const projectFactory = (title, store = taskStoreFactory()) => {
     const getTitle = () => title;
-    const getTasks = () => [...store];
+    const getTaskStore = () => store;
     const changeTitle = (t) => {
         title = t;
     }
@@ -8,7 +10,7 @@ const projectFactory = (title, store = []) => {
         store.addToStore(task);
     }
 
-    return {getTitle, getTasks, changeTitle, addTask};
+    return {getTitle, getTaskStore, changeTitle, addTask};
 }
 
 export default projectFactory;

@@ -10,6 +10,8 @@ const taskFactory = (title, desc, date, isPrior) => {
 
     const getIsPrior = () => isPrior;
 
+    const getTask = () => {title, desc, data, isPrior};
+
     const cloneTask = () => taskFactory(title, desc, date, isPrior);
 
     const changeTitle = (t) => {
@@ -27,7 +29,7 @@ const taskFactory = (title, desc, date, isPrior) => {
     }
     
 
-    return { getTitle, getDesc, getDate, getDay, getIsPrior , changeDate, changeDesc, changePrior, changeTitle, cloneTask};
+    return { getTitle, getDesc, getDate, getDay, getIsPrior, getTask, changeDate, changeDesc, changePrior, changeTitle, cloneTask};
 }
 
 export default taskFactory;

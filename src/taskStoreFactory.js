@@ -2,9 +2,9 @@
 const taskStoreFactory = (s = []) => {
     const store = s.length > 0 ? s.map((item, index) => ({ id: index, value: item })) : [];
 
-    const addToStore = (task) => store[store.push({ id: store.length, value: task })];
+    const addToStore = (task) => store[store.push({ id: store.length, value: task }) - 1];
 
-    const getStore = () => [...store];
+    const getStore = () => store;
 
     const getItemByIndex = (i) => store[i];
 
@@ -14,6 +14,8 @@ const taskStoreFactory = (s = []) => {
         store[i].value = task;
     }
 
+    const cloneTaskStore = () => taskStoreFactory(s);
+
     const removeFromStore = (i) => {
         const removed = store.splice(i, 1)[0];
         store.forEach((elem, index) => {
@@ -22,7 +24,7 @@ const taskStoreFactory = (s = []) => {
         return removed;
     }
 
-    return { addToStore, getItemByIndex, getItemValueByIndex, changeItemValue, getStore, removeFromStore };
+    return { addToStore, getItemByIndex, getItemValueByIndex, changeItemValue, getStore, removeFromStore, cloneTaskStore };
 }
 
 export default taskStoreFactory;

@@ -8,7 +8,9 @@ const inputsOutputter = () => {
 
     const getPriorValue = () => inputCheckOutputter().getCheck();
 
-    return { getTitleValue, getDescValue, getDateValue, getPriorValue };
+    const getProjectValue = () => inputSelectOutputter();
+
+    return { getTitleValue, getDescValue, getDateValue, getPriorValue, getProjectValue };
 }
 
 const inputTextOutputter = (id) => {
@@ -33,6 +35,12 @@ function inputCheckOutputter() {
     input.checked = false;
     const getCheck = () => value;
     return { getCheck };
+}
+
+const inputSelectOutputter = () => {
+    const select = document.getElementById('projSelecter');
+    const getProject = () => select.value;
+    return { getProject };
 }
 
 export { inputsOutputter };
