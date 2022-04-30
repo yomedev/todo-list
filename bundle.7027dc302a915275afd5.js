@@ -114,11 +114,16 @@ var inputsOutputter = function inputsOutputter() {
     return inputCheckOutputter().getCheck();
   };
 
+  var getProjectValue = function getProjectValue() {
+    return inputSelectOutputter();
+  };
+
   return {
     getTitleValue: getTitleValue,
     getDescValue: getDescValue,
     getDateValue: getDateValue,
-    getPriorValue: getPriorValue
+    getPriorValue: getPriorValue,
+    getProjectValue: getProjectValue
   };
 };
 
@@ -163,6 +168,18 @@ function inputCheckOutputter() {
     getCheck: getCheck
   };
 }
+
+var inputSelectOutputter = function inputSelectOutputter() {
+  var select = document.getElementById('projSelecter');
+
+  var getProject = function getProject() {
+    return select.value;
+  };
+
+  return {
+    getProject: getProject
+  };
+};
 
 
 
@@ -217,27 +234,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+/* harmony import */ var _taskStoreFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./taskStoreFactory */ "./src/taskStoreFactory.js");
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var projectFactory = function projectFactory(title) {
-  var store = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+  var store = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_0__["default"])();
 
   var getTitle = function getTitle() {
     return title;
   };
 
-  var getTasks = function getTasks() {
-    return _toConsumableArray(store);
+  var getTaskStore = function getTaskStore() {
+    return store;
   };
 
   var changeTitle = function changeTitle(t) {
@@ -250,13 +258,50 @@ var projectFactory = function projectFactory(title) {
 
   return {
     getTitle: getTitle,
-    getTasks: getTasks,
+    getTaskStore: getTaskStore,
     changeTitle: changeTitle,
     addTask: addTask
   };
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (projectFactory);
+
+/***/ }),
+
+/***/ "./src/projectRenderer.js":
+/*!********************************!*\
+  !*** ./src/projectRenderer.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _taskStoreRenderer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./taskStoreRenderer */ "./src/taskStoreRenderer.js");
+
+
+var projectRenderer = function projectRenderer(project) {
+  var header = document.getElementById('projHeader');
+
+  var renderProject = function renderProject() {
+    header.textContent = project.getTitle();
+    var taskRenderer = (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_0__["default"])(project.getTaskStore());
+    taskRenderer.renderList();
+    return taskRenderer;
+  };
+
+  var changeProject = function changeProject(proj) {
+    project = proj;
+  };
+
+  return {
+    renderProject: renderProject,
+    changeProject: changeProject
+  };
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (projectRenderer);
 
 /***/ }),
 
@@ -270,32 +315,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 var projectStoreFactory = function projectStoreFactory() {
-  var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var store = s.length > 0 ? s.map(function (item, index) {
+    return {
+      id: index,
+      value: item
+    };
+  }) : [];
 
   var addToStore = function addToStore(project) {
-    return store.push(project);
+    return store[store.push({
+      id: store.length,
+      value: project
+    }) - 1];
   };
 
   var getStore = function getStore() {
-    return _toConsumableArray(store);
+    return store;
+  };
+
+  var getItemByIndex = function getItemByIndex(index) {
+    return store[index];
+  };
+
+  var getItemValueByIndex = function getItemValueByIndex(index) {
+    return store[index].value;
   };
 
   return {
     addToStore: addToStore,
-    getStore: getStore
+    getStore: getStore,
+    getItemByIndex: getItemByIndex,
+    getItemValueByIndex: getItemValueByIndex
   };
 };
 
@@ -336,6 +388,10 @@ var taskFactory = function taskFactory(title, desc, date, isPrior) {
     return isPrior;
   };
 
+  var getTask = function getTask() {
+    title, desc, data, isPrior;
+  };
+
   var cloneTask = function cloneTask() {
     return taskFactory(title, desc, date, isPrior);
   };
@@ -363,6 +419,7 @@ var taskFactory = function taskFactory(title, desc, date, isPrior) {
     getDate: getDate,
     getDay: getDay,
     getIsPrior: getIsPrior,
+    getTask: getTask,
     changeDate: changeDate,
     changeDesc: changeDesc,
     changePrior: changePrior,
@@ -385,18 +442,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 var taskStoreFactory = function taskStoreFactory() {
   var s = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   var store = s.length > 0 ? s.map(function (item, index) {
@@ -410,11 +455,11 @@ var taskStoreFactory = function taskStoreFactory() {
     return store[store.push({
       id: store.length,
       value: task
-    })];
+    }) - 1];
   };
 
   var getStore = function getStore() {
-    return _toConsumableArray(store);
+    return store;
   };
 
   var getItemByIndex = function getItemByIndex(i) {
@@ -427,6 +472,10 @@ var taskStoreFactory = function taskStoreFactory() {
 
   var changeItemValue = function changeItemValue(i, task) {
     store[i].value = task;
+  };
+
+  var cloneTaskStore = function cloneTaskStore() {
+    return taskStoreFactory(s);
   };
 
   var removeFromStore = function removeFromStore(i) {
@@ -443,7 +492,8 @@ var taskStoreFactory = function taskStoreFactory() {
     getItemValueByIndex: getItemValueByIndex,
     changeItemValue: changeItemValue,
     getStore: getStore,
-    removeFromStore: removeFromStore
+    removeFromStore: removeFromStore,
+    cloneTaskStore: cloneTaskStore
   };
 };
 
@@ -473,7 +523,7 @@ var taskStoreRenderer = function taskStoreRenderer(store) {
       var item = (0,_listItemFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(elem).getDemoItem();
       list.append(item);
     });
-    return list.childNodes;
+    return list.children;
   };
 
   var changeItemToEdit = function changeItemToEdit(demo) {
@@ -593,6 +643,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./taskStoreRenderer */ "./src/taskStoreRenderer.js");
 /* harmony import */ var _projectFactory__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./projectFactory */ "./src/projectFactory.js");
 /* harmony import */ var _projectStoreFactory__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./projectStoreFactory */ "./src/projectStoreFactory.js");
+/* harmony import */ var _projectRenderer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./projectRenderer */ "./src/projectRenderer.js");
+
 
 
 
@@ -600,42 +652,61 @@ __webpack_require__.r(__webpack_exports__);
 
  // Global variables
 
-var dateInput = document.getElementById('dueDate');
-dateInput.valueAsDate = new Date();
-var arr = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Book', 'Read 10 pages of the book', new Date(2022, 4, 30), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Cook', 'Cook the dinner', new Date(2022, 4, 28), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Grocery', 'Go to the grocery store', new Date(2022, 4, 29), false)];
-var store = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(arr);
-var commonProject = (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Common', store);
-var projectStore = (0,_projectStoreFactory__WEBPACK_IMPORTED_MODULE_5__["default"])([commonProject]); // Listeners
+document.getElementById('dueDate').valueAsDate = new Date();
+var commonTasks = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Book', 'Read 10 pages of the book', new Date(2022, 4, 30), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Cook', 'Cook the dinner', new Date(2022, 5, 2), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Grocery', 'Go to the grocery store', new Date(2022, 5, 1), false)];
+var workingTasks = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Web', 'Learn about a new technology', new Date(2022, 5, 1), true)];
+var trainingTasks = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Running', 'Run 2 km at morning', new Date(2022, 5, 1), false), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Gym', 'Train 2 hr session at evening', new Date(2022, 4, 30), true)];
+var commonTaskStore = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(commonTasks);
+var trainingTaskStore = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(trainingTasks);
+var workingTaskStore = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(workingTasks);
+var projectStore = (0,_projectStoreFactory__WEBPACK_IMPORTED_MODULE_5__["default"])([(0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Common', commonTaskStore), (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Working', workingTaskStore), (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Training', trainingTaskStore)]); // Listeners
 
 document.getElementById('addTask').addEventListener('click', addTaskHandler);
 document.getElementById('addProj').addEventListener('click', addProjectHandler);
-document.getElementById('openProj').addEventListener('click', openProjectHandler);
-var renderer = (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(store);
-renderer.renderList().forEach(function (item) {
-  item.addEventListener('dblclick', dblclickTaskHandler);
-  deleteHandler(item);
-});
 var projectSelecter = document.getElementById('projSelecter');
-var projectList = document.getElementById('projList');
+var projectPicker = document.getElementById('projPicker');
+projectPicker.addEventListener('input', pickProjectHandler);
 projectStore.getStore().forEach(function (project) {
-  var option = document.createElement('option');
-  var title = project.getTitle();
-  option.value = title;
-  option.textContent = title;
-  projectSelecter.append(option);
-  var listItem = document.createElement('li');
-  listItem.classList.add('text-lg', 'p-2', 'w-full', 'h-full', 'hover:bg-indigo-400', 'cursor-pointer');
-  listItem.textContent = title;
-  projectList.append(listItem);
-}); // Handlers
+  addOptionToSelect(projectSelecter, project);
+  addOptionToSelect(projectPicker, project);
+});
+var renderer = (0,_projectRenderer__WEBPACK_IMPORTED_MODULE_6__["default"])(projectStore.getItemValueByIndex(projectPicker.value));
+var taskRenderer = renderer.renderProject();
+console.log(taskRenderer);
 
-function addProjectHandler() {
-  projectStore.addToStore((0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])(document.getElementById('titleProj').value));
+function addOptionToSelect(select, project) {
+  var option = document.createElement('option');
+  var title = project.value.getTitle();
+  option.value = project.id;
+  option.textContent = title;
+  select.append(option);
+} // Handlers
+
+
+function pickProjectHandler(e) {
+  renderer.changeProject(projectStore.getItemValueByIndex(e.currentTarget.value));
+  renderer.renderProject();
 }
 
-function openProjectHandler() {
-  document.getElementById('projList').classList.toggle('hidden');
-  document.getElementById('projList').classList.toggle('flex');
+function addProjectHandler() {
+  var input = document.getElementById('titleProj');
+  var value = input.value;
+  input.value = '';
+  var project = projectStore.addToStore((0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])(value));
+  addOptionToSelect(projectSelecter, project);
+  addOptionToSelect(projectPicker, project);
+}
+
+function addTaskHandler() {
+  var inputs = (0,_inputsOutputter__WEBPACK_IMPORTED_MODULE_1__.inputsOutputter)();
+  var task = (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(inputs.getTitleValue(), inputs.getDescValue(), inputs.getDateValue(), inputs.getPriorValue());
+  var project = projectStore.getItemValueByIndex(inputs.getProjectValue().getProject());
+  project.addTask(task);
+  var store = project.getTaskStore();
+  console.log(store.getStore()); // store.addToStore(task)
+  // const item = renderer.addItem();
+  // item.addEventListener('dblclick', dblclickTaskHandler);
+  // deleteHandler(item);
 }
 
 function deleteHandler(item) {
@@ -643,12 +714,6 @@ function deleteHandler(item) {
     store.removeFromStore(item.getAttribute('data-index'));
     renderer.removeItem(item);
   });
-}
-
-function addTaskHandler() {
-  var inputs = (0,_inputsOutputter__WEBPACK_IMPORTED_MODULE_1__.inputsOutputter)();
-  var task = (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(inputs.getTitleValue(), inputs.getDescValue(), inputs.getDateValue(), inputs.getPriorValue());
-  renderer.addItem(store.addToStore(task)).addEventListener('dblclick', dblclickTaskHandler);
 }
 
 function dblclickTaskHandler(e) {
@@ -685,4 +750,4 @@ var saveEditHandler = function saveEditHandler(item, task) {
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.427d6800d0886081657d.js.map
+//# sourceMappingURL=bundle.7027dc302a915275afd5.js.map
