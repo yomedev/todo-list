@@ -10,48 +10,44 @@ import projectRenderer from "./projectRenderer";
 // Global variables
 document.getElementById('dueDate').valueAsDate = new Date();
 
-const commonTasks = [
-    taskFactory('Book', 'Read 10 pages of the book', new Date(2022, 4, 30), true),
-    taskFactory('Cook', 'Cook the dinner', new Date(2022, 5, 2), true),
-    taskFactory('Grocery', 'Go to the grocery store', new Date(2022, 5, 1), false),
-];
-
-const workingTasks = [
-    taskFactory('Web', 'Learn about a new technology', new Date(2022, 5, 1), true),
-];
-
-const trainingTasks = [
-    taskFactory('Running', 'Run 2 km at morning', new Date(2022, 5, 1), false),
-    taskFactory('Gym', 'Train 2 hr session at evening', new Date(2022, 4, 30), true),
-];
-
-const commonTaskStore = taskStoreFactory(commonTasks);
-const trainingTaskStore = taskStoreFactory(trainingTasks);
-const workingTaskStore = taskStoreFactory(workingTasks);
-
 const projectStore = projectStoreFactory([
-    projectFactory('Common', commonTaskStore),
-    projectFactory('Working', workingTaskStore),
-    projectFactory('Training', trainingTaskStore),
+    projectFactory('Common', taskStoreFactory([
+        taskFactory('Book', 'Read 10 pages of the book', new Date(2022, 4, 30), true),
+        taskFactory('Cook', 'Cook the dinner', new Date(2022, 5, 2), true),
+        taskFactory('Grocery', 'Go to the grocery store', new Date(2022, 5, 1), false),
+    ])),
+    projectFactory('Working', taskStoreFactory([
+        taskFactory('Web', 'Learn about a new technology', new Date(2022, 5, 1), true),
+    ])),
+    projectFactory('Training', taskStoreFactory([
+        taskFactory('Running', 'Run 2 km at morning', new Date(2022, 5, 1), false),
+        taskFactory('Gym', 'Train 2 hr session at evening', new Date(2022, 4, 30), true),
+    ])),
 ]);
 
 // Listeners
-document.getElementById('addTask').addEventListener('click', addTaskHandler);
+
+
+addTaskHandler();
+
 document.getElementById('addProj').addEventListener('click', addProjectHandler);
 
 const projectSelecter = document.getElementById('projSelecter');
 const projectPicker = document.getElementById('projPicker');
 projectPicker.addEventListener('input', pickProjectHandler);
-projectStore.getStore().forEach((project) => {
+
+projectStore.getStore().forEach(project => {
     addOptionToSelect(projectSelecter, project);
     addOptionToSelect(projectPicker, project);
 });
 
-const renderer = projectRenderer(projectStore.getItemValueByIndex(projectPicker.value));
-
-
-const taskRenderer = renderer.renderProject();
-console.log(taskRenderer);
+let currentProject = projectStore.getItemValueByIndex(projectPicker.value)
+const renderer = projectRenderer(currentProject);
+const storeList = renderer.renderProject().getListItems();
+storeList.forEach(item => {
+    deleteTaskHandler(currentProject.getTaskStore(), item);
+    dblclickTaskHandler(currentProject.getTaskStore(), item);
+});
 
 function addOptionToSelect(select, project) {
     const option = document.createElement('option');
@@ -65,8 +61,13 @@ function addOptionToSelect(select, project) {
 // Handlers
 
 function pickProjectHandler(e) {
-    renderer.changeProject(projectStore.getItemValueByIndex(e.currentTarget.value));
+    currentProject = projectStore.getItemValueByIndex(e.currentTarget.value)
+    renderer.changeProject(currentProject);
     renderer.renderProject();
+    storeList.forEach(item => {
+        deleteTaskHandler(currentProject.getTaskStore(), item);
+        dblclickTaskHandler(currentProject.getTaskStore(), item);
+    });
 }
 
 function addProjectHandler() {
@@ -78,39 +79,69 @@ function addProjectHandler() {
     addOptionToSelect(projectPicker, project);
 }
 
-function addTaskHandler() {
-    const inputs = inputsOutputter();
-    const task = taskFactory(
-        inputs.getTitleValue(),
-        inputs.getDescValue(),
-        inputs.getDateValue(),
-        inputs.getPriorValue()
-    );
-    
-    const project = projectStore.getItemValueByIndex(inputs.getProjectValue().getProject());
-    project.addTask(task);
-    const store = project.getTaskStore();
-    console.log(store.getStore());
-    
-    // store.addToStore(task)
-    // const item = renderer.addItem();
-    // item.addEventListener('dblclick', dblclickTaskHandler);
-    // deleteHandler(item);
-}
 
-function deleteHandler(item) {
-    item.getElementsByTagName('button')[0].addEventListener('click', (e) => {
-        store.removeFromStore(item.getAttribute('data-index'));
-        renderer.removeItem(item);
+
+function addTaskHandler() {
+    document.getElementById('addTask').addEventListener('click', () => {
+        const inputs = inputsOutputter();
+        const task = taskFactory(
+            inputs.getTitleValue(),
+            inputs.getDescValue(),
+            inputs.getDateValue(),
+            inputs.getPriorValue()
+        );
+        const projectId = inputs.getProjectValue().getProject();
+        const project = projectStore.getItemValueByIndex(projectId);
+        const taskStoreItem = project.addTask(task);
+        const taskStore = project.getTaskStore();
+        if (projectId === projectPicker.value) {
+            const listItem = taskStoreRenderer(taskStore).addItem(taskStoreItem);
+            deleteTaskHandler(project.getTaskStore(), listItem);
+            dblclickTaskHandler(taskStore, listItem);
+        }
     });
 }
 
-function dblclickTaskHandler(e) {
-    let item = e.currentTarget;
-    item.removeEventListener('dblclick', dblclickTaskHandler);
-    item = renderer.changeItemToEdit(item);
-    const task = store.getItemValueByIndex(item.getAttribute('data-index'));
-    saveEditHandler(item, editInputsHandler(task.cloneTask(), task));
+function deleteTaskHandler(store, item) {
+    item.getElementsByTagName('button')[0].addEventListener('click', (e) => {
+        store.removeFromStore(item.getAttribute('data-index'));
+        taskStoreRenderer(store).removeItem(item);
+    });
+}
+
+function dblclickTaskHandler(store, item) {
+    const taskRenderer = taskStoreRenderer(store);
+
+    item.addEventListener('dblclick', () => {
+        taskRenderer.getListItems().forEach((item, index) => {
+            if (item.getAttribute('id') === 'edit') {
+                item = taskRenderer.changeItemToDemo(taskRenderer.getItemByIndex(index));
+                dblclickTaskHandler(store, item);
+            }
+        })
+        item.removeEventListener('dblclick', dblclickTaskHandler);
+        item = taskRenderer.changeItemToEdit(item);
+        const task = store.getItemValueByIndex(item.getAttribute('data-index'));
+        saveEditHandler(store, item, editInputsHandler(task.cloneTask(), task));
+        closeTaskHandler(store, item);
+    });
+}
+
+const saveEditHandler = (store, item, task) => {
+    document.getElementById('saveBtn').addEventListener('click', (e) => {
+        store.changeItemValue(e.currentTarget.parentElement.getAttribute('data-index'), task);
+        item = taskStoreRenderer(store).changeItemToDemo(item);
+        dblclickTaskHandler(store, item);
+        deleteTaskHandler(store, item);
+    });
+}
+
+const closeTaskHandler = (store, item) => {
+    document.getElementById('closeBtn').addEventListener('click', () => {
+        item = taskStoreRenderer(store).changeItemToDemo(item);
+        dblclickTaskHandler(store, item);
+        deleteTaskHandler(store, item);
+    })
 }
 
 const editInputsHandler = (newTask, task) => {
@@ -133,9 +164,4 @@ const editInputsHandler = (newTask, task) => {
     return newTask;
 }
 
-const saveEditHandler = (item, task) => {
-    document.getElementById('saveBtn').addEventListener('click', (e) => {
-        store.changeItemValue(e.currentTarget.parentElement.getAttribute('data-index'), task);
-        renderer.changeItemToDemo(item).addEventListener('dblclick', dblclickTaskHandler);
-    });
-}
+

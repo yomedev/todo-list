@@ -57,9 +57,14 @@ const createDelButton = () => {
     return button;
 }
 
-const createSelect = () => {
-    const select = document.createElement('select');
-    
+const createCloseButton = () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('p-1', 'w-1/2', 'bg-green-300');
+    button.setAttribute('id', 'closeBtn');
+    button.textContent = "Close";
+    return button;
 }
 
-export { createTextElem, createTextInputElem, createDateInputElem, createCheckInputElem, createButtonElem, createDelButton };
+
+export { createTextElem, createTextInputElem, createDateInputElem, createCheckInputElem, createButtonElem, createDelButton, createCloseButton };

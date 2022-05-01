@@ -10,7 +10,7 @@ const taskStoreRenderer = (store) => {
             const item = listItemFactory(elem).getDemoItem();
             list.append(item);
         });
-        return list.children;
+        return list.childNodes;
     }
 
     const changeItemToEdit = (demo) => {
@@ -43,11 +43,11 @@ const taskStoreRenderer = (store) => {
         return item;
     }
 
-    const getList = () => {
-        return list;
-    }
+    const getListItems = () => list.childNodes;
 
-    return { renderList, addItem, changeItemToEdit, changeItemToDemo, removeItem, getList };
+    const getItemByIndex = (index) => list.childNodes.item(index);
+
+    return { renderList, addItem, changeItemToEdit, changeItemToDemo, removeItem, getListItems, getItemByIndex };
 }
 
 export default taskStoreRenderer;

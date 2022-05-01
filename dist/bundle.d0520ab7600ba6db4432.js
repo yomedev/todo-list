@@ -12,6 +12,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createButtonElem": () => (/* binding */ createButtonElem),
 /* harmony export */   "createCheckInputElem": () => (/* binding */ createCheckInputElem),
+/* harmony export */   "createCloseButton": () => (/* binding */ createCloseButton),
 /* harmony export */   "createDateInputElem": () => (/* binding */ createDateInputElem),
 /* harmony export */   "createDelButton": () => (/* binding */ createDelButton),
 /* harmony export */   "createTextElem": () => (/* binding */ createTextElem),
@@ -79,8 +80,13 @@ var createDelButton = function createDelButton() {
   return button;
 };
 
-var createSelect = function createSelect() {
-  var select = document.createElement('select');
+var createCloseButton = function createCloseButton() {
+  var button = document.createElement('button');
+  button.type = 'button';
+  button.classList.add('p-1', 'w-1/2', 'bg-green-300');
+  button.setAttribute('id', 'closeBtn');
+  button.textContent = "Close";
+  return button;
 };
 
 
@@ -98,24 +104,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "inputsOutputter": () => (/* binding */ inputsOutputter)
 /* harmony export */ });
 var inputsOutputter = function inputsOutputter() {
+  var title = inputTextOutputter('title').getText();
+  var desc = inputTextOutputter('desc').getText();
+  var date = inputDateOutputter().getDate();
+  var isPrior = inputCheckOutputter().getCheck();
+
   var getTitleValue = function getTitleValue() {
-    return inputTextOutputter('title').getText();
+    return title;
   };
 
   var getDescValue = function getDescValue() {
-    return inputTextOutputter('desc').getText();
+    return desc;
   };
 
   var getDateValue = function getDateValue() {
-    return inputDateOutputter().getDate();
+    return date;
   };
 
   var getPriorValue = function getPriorValue() {
-    return inputCheckOutputter().getCheck();
+    return isPrior;
   };
 
   var getProjectValue = function getProjectValue() {
     return inputSelectOutputter();
+  };
+
+  var getTask = function getTask() {
+    return {
+      title: title,
+      desc: desc,
+      date: date,
+      isPrior: isPrior
+    };
   };
 
   return {
@@ -123,7 +143,8 @@ var inputsOutputter = function inputsOutputter() {
     getDescValue: getDescValue,
     getDateValue: getDateValue,
     getPriorValue: getPriorValue,
-    getProjectValue: getProjectValue
+    getProjectValue: getProjectValue,
+    getTask: getTask
   };
 };
 
@@ -204,13 +225,15 @@ var listItemFactory = function listItemFactory(task) {
   item.setAttribute('data-index', task.id);
 
   var getDemoItem = function getDemoItem() {
+    item.setAttribute('id', 'demo');
     item.classList.add('hover:p-3', 'hover:ease-in', 'duration-300');
     item.append((0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextElem)(task.value.getTitle()), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextElem)(task.value.getDay(), 'text-sm', 'text-gray-500'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createDelButton)());
     return item;
   };
 
   var getEditItem = function getEditItem() {
-    item.append((0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Title', task.value.getTitle(), 'editTitle'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Description', task.value.getDesc(), 'editDesc'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createDateInputElem)(task.value.getDate(), 'editDueDate'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createCheckInputElem)(task.value.getIsPrior(), 'editPrior'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createButtonElem)('Save', 'saveBtn'));
+    item.setAttribute('id', 'edit');
+    item.append((0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Title', task.value.getTitle(), 'editTitle'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createTextInputElem)('Description', task.value.getDesc(), 'editDesc'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createDateInputElem)(task.value.getDate(), 'editDueDate'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createCheckInputElem)(task.value.getIsPrior(), 'editPrior'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createButtonElem)('Save', 'saveBtn'), (0,_Components_js__WEBPACK_IMPORTED_MODULE_0__.createCloseButton)());
     return item;
   };
 
@@ -253,7 +276,7 @@ var projectFactory = function projectFactory(title) {
   };
 
   var addTask = function addTask(task) {
-    store.addToStore(task);
+    return store.addToStore(task);
   };
 
   return {
@@ -335,6 +358,10 @@ var projectStoreFactory = function projectStoreFactory() {
     return store;
   };
 
+  var cloneStore = function cloneStore() {
+    return projectStoreFactory(s);
+  };
+
   var getItemByIndex = function getItemByIndex(index) {
     return store[index];
   };
@@ -346,6 +373,7 @@ var projectStoreFactory = function projectStoreFactory() {
   return {
     addToStore: addToStore,
     getStore: getStore,
+    cloneStore: cloneStore,
     getItemByIndex: getItemByIndex,
     getItemValueByIndex: getItemValueByIndex
   };
@@ -523,7 +551,7 @@ var taskStoreRenderer = function taskStoreRenderer(store) {
       var item = (0,_listItemFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(elem).getDemoItem();
       list.append(item);
     });
-    return list.children;
+    return list.childNodes;
   };
 
   var changeItemToEdit = function changeItemToEdit(demo) {
@@ -556,8 +584,12 @@ var taskStoreRenderer = function taskStoreRenderer(store) {
     return item;
   };
 
-  var getList = function getList() {
-    return list;
+  var getListItems = function getListItems() {
+    return list.childNodes;
+  };
+
+  var getItemByIndex = function getItemByIndex(index) {
+    return list.childNodes.item(index);
   };
 
   return {
@@ -566,7 +598,8 @@ var taskStoreRenderer = function taskStoreRenderer(store) {
     changeItemToEdit: changeItemToEdit,
     changeItemToDemo: changeItemToDemo,
     removeItem: removeItem,
-    getList: getList
+    getListItems: getListItems,
+    getItemByIndex: getItemByIndex
   };
 };
 
@@ -653,15 +686,9 @@ __webpack_require__.r(__webpack_exports__);
  // Global variables
 
 document.getElementById('dueDate').valueAsDate = new Date();
-var commonTasks = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Book', 'Read 10 pages of the book', new Date(2022, 4, 30), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Cook', 'Cook the dinner', new Date(2022, 5, 2), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Grocery', 'Go to the grocery store', new Date(2022, 5, 1), false)];
-var workingTasks = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Web', 'Learn about a new technology', new Date(2022, 5, 1), true)];
-var trainingTasks = [(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Running', 'Run 2 km at morning', new Date(2022, 5, 1), false), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Gym', 'Train 2 hr session at evening', new Date(2022, 4, 30), true)];
-var commonTaskStore = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(commonTasks);
-var trainingTaskStore = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(trainingTasks);
-var workingTaskStore = (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])(workingTasks);
-var projectStore = (0,_projectStoreFactory__WEBPACK_IMPORTED_MODULE_5__["default"])([(0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Common', commonTaskStore), (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Working', workingTaskStore), (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Training', trainingTaskStore)]); // Listeners
+var projectStore = (0,_projectStoreFactory__WEBPACK_IMPORTED_MODULE_5__["default"])([(0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Common', (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])([(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Book', 'Read 10 pages of the book', new Date(2022, 4, 30), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Cook', 'Cook the dinner', new Date(2022, 5, 2), true), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Grocery', 'Go to the grocery store', new Date(2022, 5, 1), false)])), (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Working', (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])([(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Web', 'Learn about a new technology', new Date(2022, 5, 1), true)])), (0,_projectFactory__WEBPACK_IMPORTED_MODULE_4__["default"])('Training', (0,_taskStoreFactory__WEBPACK_IMPORTED_MODULE_2__["default"])([(0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Running', 'Run 2 km at morning', new Date(2022, 5, 1), false), (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])('Gym', 'Train 2 hr session at evening', new Date(2022, 4, 30), true)]))]); // Listeners
 
-document.getElementById('addTask').addEventListener('click', addTaskHandler);
+addTaskHandler();
 document.getElementById('addProj').addEventListener('click', addProjectHandler);
 var projectSelecter = document.getElementById('projSelecter');
 var projectPicker = document.getElementById('projPicker');
@@ -670,9 +697,13 @@ projectStore.getStore().forEach(function (project) {
   addOptionToSelect(projectSelecter, project);
   addOptionToSelect(projectPicker, project);
 });
-var renderer = (0,_projectRenderer__WEBPACK_IMPORTED_MODULE_6__["default"])(projectStore.getItemValueByIndex(projectPicker.value));
-var taskRenderer = renderer.renderProject();
-console.log(taskRenderer);
+var currentProject = projectStore.getItemValueByIndex(projectPicker.value);
+var renderer = (0,_projectRenderer__WEBPACK_IMPORTED_MODULE_6__["default"])(currentProject);
+var storeList = renderer.renderProject().getListItems();
+storeList.forEach(function (item) {
+  deleteTaskHandler(currentProject.getTaskStore(), item);
+  dblclickTaskHandler(currentProject.getTaskStore(), item);
+});
 
 function addOptionToSelect(select, project) {
   var option = document.createElement('option');
@@ -684,8 +715,13 @@ function addOptionToSelect(select, project) {
 
 
 function pickProjectHandler(e) {
-  renderer.changeProject(projectStore.getItemValueByIndex(e.currentTarget.value));
+  currentProject = projectStore.getItemValueByIndex(e.currentTarget.value);
+  renderer.changeProject(currentProject);
   renderer.renderProject();
+  storeList.forEach(function (item) {
+    deleteTaskHandler(currentProject.getTaskStore(), item);
+    dblclickTaskHandler(currentProject.getTaskStore(), item);
+  });
 }
 
 function addProjectHandler() {
@@ -698,31 +734,62 @@ function addProjectHandler() {
 }
 
 function addTaskHandler() {
-  var inputs = (0,_inputsOutputter__WEBPACK_IMPORTED_MODULE_1__.inputsOutputter)();
-  var task = (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(inputs.getTitleValue(), inputs.getDescValue(), inputs.getDateValue(), inputs.getPriorValue());
-  var project = projectStore.getItemValueByIndex(inputs.getProjectValue().getProject());
-  project.addTask(task);
-  var store = project.getTaskStore();
-  console.log(store.getStore()); // store.addToStore(task)
-  // const item = renderer.addItem();
-  // item.addEventListener('dblclick', dblclickTaskHandler);
-  // deleteHandler(item);
-}
+  document.getElementById('addTask').addEventListener('click', function () {
+    var inputs = (0,_inputsOutputter__WEBPACK_IMPORTED_MODULE_1__.inputsOutputter)();
+    var task = (0,_taskFactory__WEBPACK_IMPORTED_MODULE_0__["default"])(inputs.getTitleValue(), inputs.getDescValue(), inputs.getDateValue(), inputs.getPriorValue());
+    var projectId = inputs.getProjectValue().getProject();
+    var project = projectStore.getItemValueByIndex(projectId);
+    var taskStoreItem = project.addTask(task);
+    var taskStore = project.getTaskStore();
 
-function deleteHandler(item) {
-  item.getElementsByTagName('button')[0].addEventListener('click', function (e) {
-    store.removeFromStore(item.getAttribute('data-index'));
-    renderer.removeItem(item);
+    if (projectId === projectPicker.value) {
+      var listItem = (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(taskStore).addItem(taskStoreItem);
+      deleteTaskHandler(project.getTaskStore(), listItem);
+      dblclickTaskHandler(taskStore, listItem);
+    }
   });
 }
 
-function dblclickTaskHandler(e) {
-  var item = e.currentTarget;
-  item.removeEventListener('dblclick', dblclickTaskHandler);
-  item = renderer.changeItemToEdit(item);
-  var task = store.getItemValueByIndex(item.getAttribute('data-index'));
-  saveEditHandler(item, editInputsHandler(task.cloneTask(), task));
+function deleteTaskHandler(store, item) {
+  item.getElementsByTagName('button')[0].addEventListener('click', function (e) {
+    store.removeFromStore(item.getAttribute('data-index'));
+    (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(store).removeItem(item);
+  });
 }
+
+function dblclickTaskHandler(store, item) {
+  var taskRenderer = (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(store);
+  item.addEventListener('dblclick', function () {
+    taskRenderer.getListItems().forEach(function (item, index) {
+      if (item.getAttribute('id') === 'edit') {
+        item = taskRenderer.changeItemToDemo(taskRenderer.getItemByIndex(index));
+        dblclickTaskHandler(store, item);
+      }
+    });
+    item.removeEventListener('dblclick', dblclickTaskHandler);
+    item = taskRenderer.changeItemToEdit(item);
+    var task = store.getItemValueByIndex(item.getAttribute('data-index'));
+    saveEditHandler(store, item, editInputsHandler(task.cloneTask(), task));
+    closeTaskHandler(store, item);
+  });
+}
+
+var saveEditHandler = function saveEditHandler(store, item, task) {
+  document.getElementById('saveBtn').addEventListener('click', function (e) {
+    store.changeItemValue(e.currentTarget.parentElement.getAttribute('data-index'), task);
+    item = (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(store).changeItemToDemo(item);
+    dblclickTaskHandler(store, item);
+    deleteTaskHandler(store, item);
+  });
+};
+
+var closeTaskHandler = function closeTaskHandler(store, item) {
+  document.getElementById('closeBtn').addEventListener('click', function () {
+    item = (0,_taskStoreRenderer__WEBPACK_IMPORTED_MODULE_3__["default"])(store).changeItemToDemo(item);
+    dblclickTaskHandler(store, item);
+    deleteTaskHandler(store, item);
+  });
+};
 
 var editInputsHandler = function editInputsHandler(newTask, task) {
   document.getElementById('editTitle').addEventListener('input', function (e) {
@@ -739,15 +806,8 @@ var editInputsHandler = function editInputsHandler(newTask, task) {
   });
   return newTask;
 };
-
-var saveEditHandler = function saveEditHandler(item, task) {
-  document.getElementById('saveBtn').addEventListener('click', function (e) {
-    store.changeItemValue(e.currentTarget.parentElement.getAttribute('data-index'), task);
-    renderer.changeItemToDemo(item).addEventListener('dblclick', dblclickTaskHandler);
-  });
-};
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle.7027dc302a915275afd5.js.map
+//# sourceMappingURL=bundle.d0520ab7600ba6db4432.js.map

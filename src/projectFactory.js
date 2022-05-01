@@ -6,9 +6,7 @@ const projectFactory = (title, store = taskStoreFactory()) => {
     const changeTitle = (t) => {
         title = t;
     }
-    const addTask = (task) => {
-        store.addToStore(task);
-    }
+    const addTask = (task) => store.addToStore(task);
 
     return {getTitle, getTaskStore, changeTitle, addTask};
 }

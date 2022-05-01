@@ -1,16 +1,22 @@
 const inputsOutputter = () => {
+    const title = inputTextOutputter('title').getText();
+    const desc = inputTextOutputter('desc').getText();
+    const date = inputDateOutputter().getDate();
+    const isPrior = inputCheckOutputter().getCheck();
 
-    const getTitleValue = () => inputTextOutputter('title').getText();
+    const getTitleValue = () => title;
 
-    const getDescValue = () => inputTextOutputter('desc').getText();
+    const getDescValue = () => desc;
 
-    const getDateValue = () => inputDateOutputter().getDate();
+    const getDateValue = () => date;
 
-    const getPriorValue = () => inputCheckOutputter().getCheck();
+    const getPriorValue = () => isPrior;
 
     const getProjectValue = () => inputSelectOutputter();
 
-    return { getTitleValue, getDescValue, getDateValue, getPriorValue, getProjectValue };
+    const getTask = () => ({title, desc, date, isPrior});
+
+    return { getTitleValue, getDescValue, getDateValue, getPriorValue, getProjectValue, getTask };
 }
 
 const inputTextOutputter = (id) => {
