@@ -66,5 +66,41 @@ const createCloseButton = () => {
     return button;
 }
 
+const createProjectInput = () => {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.classList.add('w-40', 'bg-transparent', 'p-2', 'mr-2', 'text-xl', 'font-bold', 'outline-none', 'hover:bg-indigo-100', 'focus:bg-indigo-100');
+    input.setAttribute('id', 'projTitle');
+    return input;
+}
 
-export { createTextElem, createTextInputElem, createDateInputElem, createCheckInputElem, createButtonElem, createDelButton, createCloseButton };
+const createProjectDelBtn = () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('p-1', 'w-24', 'bg-red-300', 'text-lg');
+    button.setAttribute('id', 'projDel');
+    button.textContent = "Delete";
+    return button;
+}
+
+const createProjectSaveBtn = () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('p-1', 'w-16', 'bg-indigo-300', 'text-lg');
+    button.setAttribute('id', 'projSave');
+    button.textContent = "Save";
+    return button;
+}
+
+const createProjectCancelBtn = () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.classList.add('p-1', 'w-16', 'bg-green-300', 'text-lg');
+    button.setAttribute('id', 'projCancel');
+    button.textContent = "Cancel";
+    return button;
+}
+
+
+export { createTextElem, createTextInputElem, createDateInputElem, createCheckInputElem, createButtonElem, createDelButton, createCloseButton, createProjectInput, createProjectDelBtn, createProjectSaveBtn, createProjectCancelBtn };
+

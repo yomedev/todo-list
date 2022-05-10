@@ -9,7 +9,7 @@ const listItemFactory = (task) => {
         item.setAttribute('id', 'demo');
         item.classList.add('hover:p-3', 'hover:ease-in', 'duration-300');
         item.append(createTextElem(task.value.getTitle()),
-            createTextElem(task.value.getDay(), 'text-sm', 'text-gray-500'),
+            createTextElem(task.value.getDueDay(), 'text-sm', 'text-gray-500'),
             createDelButton());
         return item;
     }

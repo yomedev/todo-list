@@ -5,7 +5,6 @@ const taskStoreRenderer = (store) => {
     
     const renderList = () => {
         list.innerHTML = '';
-        
         store.getStore().forEach(elem => {
             const item = listItemFactory(elem).getDemoItem();
             list.append(item);

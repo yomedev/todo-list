@@ -1,35 +1,39 @@
 
-const taskFactory = (title, desc, date, isPrior) => {
-    const getTitle = () => title;
+const taskFactory = (task, description, dueDate, priority) => {
 
-    const getDesc = () => desc;
+    const getTitle = () => task;
 
-    const getDate = () => date;
+    const getDescription = () => description;
 
-    const getDay = () => date.toLocaleDateString('en-US', { weekday: 'short', });
+    const getDueDate = () => dueDate;
 
-    const getIsPrior = () => isPrior;
+    const getDueDay = () => dueDate.toLocaleDateString('en-US', { weekday: 'short', });
 
-    const getTask = () => {title, desc, data, isPrior};
+    const getPrioriry = () => priority;
 
-    const cloneTask = () => taskFactory(title, desc, date, isPrior);
+    const getTask = () => {task, description, dueDate, priority};
 
-    const changeTitle = (t) => {
-        title = t;
-        return title;
+    const cloneTask = () => taskFactory(task, description, dueDate, priority);
+
+    const changeTitle = (taskArg) => {
+        task = taskArg;
+        return task;
     }
-    const changeDesc = (d) => {
-        desc = d;
+    const changeDescription = (descriptionArg) => {
+        description = descriptionArg;
+        return description;
     }
-    const changeDate = (d) => {
-        date = d;
+    const changeDueDate = (dueDateArg) => {
+        dueDate = dueDateArg;
+        return dueDate;
     }
-    const changePrior = (p) => {
-        isPrior = p;
+    const changePrior = (priorityArg) => {
+        priority = priorityArg;
+        return priority;
     }
     
 
-    return { getTitle, getDesc, getDate, getDay, getIsPrior, getTask, changeDate, changeDesc, changePrior, changeTitle, cloneTask};
+    return { getTitle, getDescription, getDueDate, getDueDay, getPrioriry, getTask, changeDueDate, changeDescription, changePrior, changeTitle, cloneTask};
 }
 
 export default taskFactory;
